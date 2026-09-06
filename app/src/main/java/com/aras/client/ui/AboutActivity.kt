@@ -89,9 +89,9 @@ fun AboutScreen(
                 onClick = { Utils.openUri(context, AppConfig.APP_URL) }
             )
             SettingsMenuItem(
-                icon = painterResource(R.drawable.ic_source_code_24dp),
-                title = stringResource(R.string.title_creator),
-                onClick = { Utils.openUri(context, "https://github.com/Mehtif") }
+                icon = painterResource(R.drawable.ic_about_24dp),
+                title = "Developer · @Mehtif",
+                onClick = { }
             )
             SettingsMenuItem(
                 icon = painterResource(R.drawable.license_24px),

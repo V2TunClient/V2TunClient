@@ -154,7 +154,7 @@ fun MainMenuSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
-                    painter = painterResource(R.drawable.ic_aras_logo),
+                    painter = painterResource(R.drawable.ic_v2tun_logo),
                     contentDescription = null,
                     modifier = Modifier.size(44.dp)
                 )
@@ -220,7 +220,7 @@ fun MainMenuSheet(
             ) {
                 ContactChip(
                     iconRes = R.drawable.ic_source_code_24dp,
-                    label = "GitHub · V2rayTun0",
+                    label = "GitHub · V2TunClient",
                     modifier = Modifier.weight(1f),
                     onClick = { Utils.openUri(context, AppConfig.APP_URL) }
                 )

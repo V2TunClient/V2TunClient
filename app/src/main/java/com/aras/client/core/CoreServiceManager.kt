@@ -128,6 +128,23 @@ object CoreServiceManager {
         val config = MmkvManager.decodeServerConfig(guid) ?: error("Failed to decode server config")
 
         LogUtil.i(AppConfig.TAG, "StartCore-Manager: Starting core loop for ${config.remarks}")
+
+        // AmneziaWG profiles bypass Xray entirely: the standalone awg-go
+        // tunnel takes the VPN TUN fd directly — exactly how the AmneziaVPN
+        // client runs AmneziaWG on Android. Must be checked BEFORE building
+        // any xray config.
+        if (config.configType == EConfigType.AMNEZIAWG) {
+            currentConfig = config
+            val fd = vpnInterface?.fd ?: error("VPN interface missing for AmneziaWG")
+            val uapi = AwgConfigBuilder.buildUapi(config)
+            LogUtil.i(AppConfig.TAG, "StartCore-Manager: AWG UAPI:\n$uapi")
+            CoreNativeManager.awgTurnOn(fd, uapi, 1280)
+            LogUtil.i(AppConfig.TAG, "StartCore-Manager: standalone AmneziaWG tunnel up")
+            MessageHelper.sendMsg2UI(service, AppConfig.MSG_STATE_START_SUCCESS, "")
+            ConnectionStatsManager.onSessionStarted()
+            return
+        }
+
         val result = CoreConfigManager.getXrayConfig(service, guid)
         LogUtil.d(AppConfig.TAG, result.content)
         if (!result.status) {
@@ -135,18 +152,6 @@ object CoreServiceManager {
         }
 
         currentConfig = config
-
-        // AmneziaWG profiles bypass Xray entirely: the standalone awg-go
-        // tunnel takes the VPN TUN fd directly — exactly how the AmneziaVPN
-        // client runs AmneziaWG on Android.
-        if (config.configType == EConfigType.AMNEZIAWG) {
-            val fd = vpnInterface?.fd ?: error("VPN interface missing for AmneziaWG")
-            NotificationManager.showNotification(config)
-            val uapi = AwgConfigBuilder.buildUapi(config)
-            CoreNativeManager.awgTurnOn(fd, uapi, 1280)
-            LogUtil.i(AppConfig.TAG, "StartCore-Manager: standalone AmneziaWG tunnel up")
-            return
-        }
 
         var tunFd = vpnInterface?.fd ?: 0
         val dialerMode = BrowserDialerMode.from(config.browserDialerMode)

@@ -8,5 +8,5 @@
   <circle cx="55" cy="45" r="20" fill="none" stroke="url(#g)" stroke-width="5"/>
   <path d="M60 30 L45 50 h11 l-6 18 l17 -24 h-12 z" fill="#ffd166"/>
   <text x="95" y="57" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="34"
-        font-weight="bold" fill="#ffffff">V2Tun<tspan fill="#4fb3f0">Client</tspan></text>
+        font-weight="bold" fill="#ffffff">Aras<tspan fill="#4fb3f0">Client</tspan></text>
 </svg>

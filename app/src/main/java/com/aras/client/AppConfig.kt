@@ -100,7 +100,7 @@ object AppConfig {
 
     /** Reserved guid of the built-in Free group — cannot be edited or deleted. */
     const val FREE_SUB_GUID = "aras_free_sub_builtin"
-    const val FREE_SUB_URL = "https://raw.githubusercontent.com/Mehtif/V2rayTun0/main/free/free_sub.txt"
+    const val FREE_SUB_URL = "https://raw.githubusercontent.com/ArasTey/ArasClient/main/free/free_sub.txt"
     const val PREF_REAL_PING_CONCURRENCY = "pref_real_ping_concurrency"
 
     /** Cache keys. */
@@ -139,12 +139,12 @@ object AppConfig {
     const val GITHUB_URL = "https://github.com"
     const val GITHUB_RAW_URL = "https://raw.githubusercontent.com"
     const val GITHUB_DOWNLOAD_URL = "$GITHUB_URL/%s/releases/latest/download"
-    const val ANDROID_PACKAGE_NAME_LIST_URL = "$GITHUB_RAW_URL/Mehtif/V2rayTun0/main/list/proxy.txt"
-    const val APP_URL = "$GITHUB_URL/Mehtif/V2rayTun0"
-    const val APP_API_URL = "https://api.github.com/repos/Mehtif/V2rayTun0/releases"
+    const val ANDROID_PACKAGE_NAME_LIST_URL = "$GITHUB_RAW_URL/ArasTey/ArasClient/main/list/proxy.txt"
+    const val APP_URL = "https://github.com/V2TunClient"
+    const val APP_API_URL = "https://api.github.com/repos/V2TunClient/V2TunClient/releases"
     const val APP_ISSUES_URL = "$APP_URL/issues"
     const val APP_WIKI_MODE = "$APP_URL/wiki/Mode"
-    const val APP_PRIVACY_POLICY = "$GITHUB_RAW_URL/Mehtif/V2rayTun0/main/CR.md"
+    const val APP_PRIVACY_POLICY = "$GITHUB_RAW_URL/ArasTey/ArasClient/main/CR.md"
     const val APP_PROMOTION_URL = "aHR0cHM6Ly85LjIzNDQ1Ni54eXovYWJjLmh0bWw="
     const val TG_CHANNEL_URL = "https://t.me/V2rayTun0"
     const val DELAY_TEST_URL = "https://www.gstatic.com/generate_204"
