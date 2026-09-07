@@ -80,7 +80,7 @@ V2TunClient's own encrypted container for configs and subscriptions.
 <div align="center">
 
 [![GitHub](https://img.shields.io/badge/GitHub-V2TunClient-181717?style=for-the-badge&logo=github)](https://github.com/V2TunClient)
-[![Telegram](https://img.shields.io/badge/Telegram-imV2TunClient-26a5e4?style=for-the-badge&logo=telegram)](https://t.me/V2rayTun0)
+[![Telegram](https://img.shields.io/badge/Telegram-V2rayTun0-26a5e4?style=for-the-badge&logo=telegram)](https://t.me/V2rayTun0)
 
 </div>
 
