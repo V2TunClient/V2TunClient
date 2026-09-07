@@ -9,7 +9,7 @@
 [![Release](https://img.shields.io/github/v/release/V2TunClient/V2TunClient?style=for-the-badge&logo=github&color=0284c7&labelColor=101418)](https://github.com/V2TunClient/V2TunClient/releases)
 [![License](https://img.shields.io/badge/GPL--3.0-licensed?style=for-the-badge&color=38bdf8&labelColor=101418)](LICENSE)
 [![Platform](https://img.shields.io/badge/Android-7.0%2B-3ddc84?style=for-the-badge&logo=android&labelColor=101418)]()
-[![Telegram](https://img.shields.io/badge/Telegram-%40imV2TunClient-26a5e4?style=for-the-badge&logo=telegram&labelColor=101418)](https://t.me/V2rayTun0)
+[![Telegram](https://img.shields.io/badge/Telegram-%40V2rayTun0-26a5e4?style=for-the-badge&logo=telegram&labelColor=101418)](https://t.me/V2rayTun0)
 
 </div>
 
