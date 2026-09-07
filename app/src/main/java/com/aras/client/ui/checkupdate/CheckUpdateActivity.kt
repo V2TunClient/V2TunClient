@@ -1,12 +1,15 @@
 package com.aras.client.ui.checkupdate
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.viewModels
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,6 +25,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.core.content.FileProvider
+import com.aras.client.AppConfig
 import com.aras.client.BuildConfig
 import com.aras.client.R
 import com.aras.client.core.CoreNativeManager
@@ -31,8 +36,6 @@ import com.aras.client.ui.compose.NavigationBarsSpacer
 import com.aras.client.ui.compose.SettingsMenuItem
 import com.aras.client.ui.compose.SettingsSwitchItem
 import com.aras.client.ui.compose.VersionInfoBlock
-import com.aras.client.ui.compose.verticalScrollbar
-import com.aras.client.util.Utils
 
 class CheckUpdateActivity : BaseComponentActivity() {
 
@@ -45,16 +48,64 @@ class CheckUpdateActivity : BaseComponentActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.downloadedApk.value?.let { apk ->
+            if (canInstallPackages()) {
+                installApk(apk)
+            }
+        }
+    }
+
+    private fun canInstallPackages(): Boolean {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.O || packageManager.canRequestPackageInstalls()
+    }
+
+    private fun installApk(file: java.io.File) {
+        try {
+            val uri = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.cache", file)
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, "application/vnd.android.package-archive")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            startActivity(intent)
+            viewModel.consumeDownloadedApk()
+        } catch (e: Exception) {
+            com.aras.client.util.LogUtil.e(AppConfig.TAG, "Failed to open APK installer", e)
+            viewModel.consumeDownloadedApk()
+            viewModel.toastError(R.string.toast_failure)
+        }
+    }
+
+    private fun requestInstallPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startActivity(
+                Intent(
+                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                    Uri.parse("package:$packageName")
+                )
+            )
+        }
+    }
+
     @Composable
     override fun ScreenContent() {
-        CheckUpdateScreen(viewModel = viewModel, onBackClick = { finish() })
+        CheckUpdateScreen(
+            viewModel = viewModel,
+            onBackClick = { finish() },
+            onInstallPermissionRequired = { requestInstallPermission() },
+            onInstallApk = { installApk(it) }
+        )
     }
 }
 
 @Composable
 fun CheckUpdateScreen(
     viewModel: CheckUpdateViewModel,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onInstallPermissionRequired: () -> Unit,
+    onInstallApk: (java.io.File) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -62,6 +113,18 @@ fun CheckUpdateScreen(
     val checkPreRelease by viewModel.checkPreRelease.collectAsStateWithLifecycle()
     val showUpdateDialog by viewModel.showUpdateDialog.collectAsStateWithLifecycle()
     val updateResult by viewModel.updateResult.collectAsStateWithLifecycle()
+    val downloadedApk by viewModel.downloadedApk.collectAsStateWithLifecycle()
+
+    LaunchedEffect(downloadedApk) {
+        val apk = downloadedApk ?: return@LaunchedEffect
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            !context.packageManager.canRequestPackageInstalls()
+        ) {
+            onInstallPermissionRequired()
+        } else {
+            onInstallApk(apk)
+        }
+    }
 
     val libVersion = CoreNativeManager.getLibVersion()
     val versionText = "v${BuildConfig.VERSION_NAME} ($libVersion)"
@@ -108,8 +171,7 @@ fun CheckUpdateScreen(
             },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.dismissUpdateDialog()
-                    result.downloadUrl?.let { Utils.openUri(context, it) }
+                    viewModel.downloadAndInstallUpdate()
                 }) {
                     Text(stringResource(R.string.update_now))
                 }

@@ -363,6 +363,7 @@ object HttpUtil {
         val requestBuilder = Request.Builder()
             .url(url)
             .get()
+            .header("User-Agent", "V2TunClient/${BuildConfig.VERSION_NAME}")
             .header("Connection", "close")
         if (request.httpPort != 0 && !request.proxyUsername.isNullOrBlank() && !request.proxyPassword.isNullOrBlank()) {
             requestBuilder.header("Proxy-Authorization", Credentials.basic(request.proxyUsername, request.proxyPassword))

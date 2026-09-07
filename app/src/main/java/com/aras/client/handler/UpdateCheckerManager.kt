@@ -93,17 +93,28 @@ object UpdateCheckerManager {
     private fun getDownloadUrl(release: GitHubRelease, abi: String): String {
         val fDroid = "fdroid"
 
-        val assetsByAbi = release.assets.filter {
-            (it.name.contains(abi, true))
-        }
+        val apkAssets = release.assets.filter { it.name.endsWith(".apk", ignoreCase = true) }
+        val assetsByAbi = apkAssets.filter { it.name.contains(abi, ignoreCase = true) }
 
-        val asset = if (BuildConfig.APPLICATION_ID.contains(fDroid, ignoreCase = true)) {
-            assetsByAbi.firstOrNull { it.name.contains(fDroid) }
+        val candidates = if (BuildConfig.APPLICATION_ID.contains(fDroid, ignoreCase = true)) {
+            assetsByAbi.filter { it.name.contains(fDroid, ignoreCase = true) }
         } else {
-            assetsByAbi.firstOrNull { !it.name.contains(fDroid) }
+            assetsByAbi.filter { !it.name.contains(fDroid, ignoreCase = true) }
         }
 
-        return asset?.browserDownloadUrl
-            ?: throw IllegalStateException("No compatible APK found")
+        // Prefer the ABI-specific APK, but fall back to a universal APK when a
+        // release does not publish an asset for the device ABI.
+        val universalCandidates = apkAssets.filter {
+            it.name.contains("universal", ignoreCase = true)
+        }.let { list ->
+            if (BuildConfig.APPLICATION_ID.contains(fDroid, ignoreCase = true)) {
+                list.filter { it.name.contains(fDroid, ignoreCase = true) }
+            } else {
+                list.filter { !it.name.contains(fDroid, ignoreCase = true) }
+            }
+        }
+
+        return (candidates.firstOrNull() ?: universalCandidates.firstOrNull())?.browserDownloadUrl
+            ?: throw IllegalStateException("No compatible APK found for ABI $abi")
     }
 }

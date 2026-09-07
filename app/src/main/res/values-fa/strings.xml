@@ -583,4 +583,7 @@
     <string name="title_export_sub_txt">خروجی کل ساب (فایل TXT)</string>
     <string name="title_reset_settings">بازنشانی تنظیمات به حالت پیش‌فرض</string>
     <string name="summary_reset_settings">همه تنظیمات به حالت اولیه برمی‌گردند. این صفحه دوباره بارگذاری می‌شود.</string>
+    <string name="update_downloading">در حال دانلود به‌روزرسانی…</string>
+    <string name="update_download_failed">دانلود به‌روزرسانی ناموفق بود</string>
+    <string name="update_no_notes">یادداشت انتشار برای این نسخه وجود ندارد</string>
 </resources>

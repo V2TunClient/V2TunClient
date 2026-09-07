@@ -549,4 +549,11 @@
     <string name="connection_test_empty_message">沒有詳細資訊</string>
     <string name="value_unknown">未知</string>
 
+    <string name="update_banner_available">Update available!</string>
+    <string name="update_banner_tap_to_update">A new version is ready to install.</string>
+    <string name="update_banner_dismiss">Dismiss</string>
+    <string name="update_banner_update_now">Update</string>
+    <string name="update_downloading">Downloading update…</string>
+    <string name="update_download_failed">Failed to download the update</string>
+    <string name="update_no_notes">No release notes for this version</string>
 </resources>
